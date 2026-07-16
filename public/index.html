@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Post</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main class="container">
+        <section class="card">
+            <h1>Create Post</h1>
+            <p class="subtitle">Upload an image and add a short description.</p>
+
+            <form id="uploadForm">
+                <div class="field">
+                    <label for="description">Description</label>
+                    <input type="text" name="description" id="description" placeholder="Write something about this image" required>
+                </div>
+
+                <div class="field">
+                    <label for="image">Image</label>
+                    <input type="file" name="image" id="image" accept="image/*" required>
+                </div>
+
+                <div id="previewContainer" class="preview hidden" aria-live="polite">
+                    <img id="imagePreview" alt="Selected image preview">
+                </div>
+
+                <button type="submit" id="submitButton">
+                    <span class="button-label">Upload</span>
+                    <span class="spinner hidden" id="uploadSpinner" aria-hidden="true"></span>
+                </button>
+            </form>
+
+            <p id="message" class="message" role="status" aria-live="polite"></p>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
