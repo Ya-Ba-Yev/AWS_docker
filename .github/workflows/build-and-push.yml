@@ -13,6 +13,10 @@ env:
   AWS_REGION: eu-north-1
   ECR_REGISTRY: 163567092531.dkr.ecr.eu-north-1.amazonaws.com
   ECR_REPOSITORY: cloud-images/first_docker
+  ECS_CLUSTER: devops-production-cluster
+  ECS_SERVICE: devops-first-docker-service
+  ECS_TASK_DEFINITION: .aws/task-definition.json
+  CONTAINER_NAME: app
 
 jobs:
   build-and-push:
@@ -41,3 +45,20 @@ jobs:
           tags: |
             ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
             ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:latest
+
+
+      - name: Render ECS task definition
+        id: render-task-definition
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: ${{ env.ECS_TASK_DEFINITION }}
+          container-name: ${{ env.CONTAINER_NAME }}
+          image: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
+
+      - name: Deploy to ECS
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+        with:
+          task-definition: ${{ steps.render-task-definition.outputs.task-definition }}
+          service: ${{ env.ECS_SERVICE }}
+          cluster: ${{ env.ECS_CLUSTER }}
+          wait-for-service-stability: true
