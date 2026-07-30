@@ -69,9 +69,3 @@ New tasks become healthy before old tasks are removed.
 - The application is available through the ALB DNS name.
 - Image uploads succeed through the ECS task role.
 - During deployment, repeated requests continue returning HTTP `200`.
-
-## Problem Solved
-
-The deployment initially failed because IAM permissions and the GitHub OIDC trust policy were incomplete. The service-linked role, OIDC trust relationship, ECR permissions, ECS permissions, and `iam:PassRole` permission were corrected. The deployment then completed successfully.
-
-Do not commit `.env` files, credentials, or access keys.
