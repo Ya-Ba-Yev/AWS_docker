@@ -2,12 +2,15 @@ FROM node:20-alpine AS base
 WORKDIR /app
 COPY package*.json ./
 
-FROM base AS deps
-RUN npm ci --omit=dev
+FROM base AS development
+RUN npm ci --include=dev
+COPY --chown=node:node . .
+USER node
+EXPOSE 3000
+CMD ["npm", "run", "dev"]
 
-FROM node:20-alpine AS runtime
-WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
+FROM base AS production
+RUN npm ci --omit=dev
 COPY --chown=node:node . .
 USER node
 EXPOSE 3000
